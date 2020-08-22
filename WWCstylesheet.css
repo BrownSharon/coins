@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    font
+}
+
+/* h1 {
+    background-image: url(imeges/d.php);
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+} */
+
+.title {
+    height: 40vh;
+    display: flex;
+}
+
+h1 {
+    position: absolute;
+    padding: 3%;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 60px;
+}
+
+img {
+    opacity: 0.7;
+}
+
+.navbar {
+    background-color: rgb(247, 192, 110);
+}
+
+.search>input {
+    padding: 2px;
+}
+
+.card-body {
+    border: black 2px solid;
+    width: 22%;
+    margin: 1%;
+    height: 25vh;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+#more_info {
+    width: 100%;
+    border: black 2px solid;
+    background-color: white;
+    margin-top: 1vw;
+    display: grid;
+    grid-template-areas: "pic coin1" "pic coin2" "pic coin3";
+    align-items: center;
+    */
+}
+
+#more_info>img {
+    grid-area: pic;
+    border: black 2px solid;
+    width: 90%;
+    height: 40%;
+    margin-left: 1vw;
+}
+
+.USD {
+    grid-area: coin1;
+    text-align: right;
+    margin-right: 1vw;
+    margin-top: 1vh;
+}
+
+.EUR {
+    grid-area: coin2;
+    text-align: right;
+    margin-right: 1vw;
+}
+
+.ILS {
+    grid-area: coin3;
+    text-align: right;
+    margin-right: 1vw;
+}

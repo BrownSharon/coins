@@ -6,15 +6,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Wide Coins</title>
 
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <!-- jq library -->
+
+
+    <!-- bootstrap library -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+    <!--icons library  -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
+        integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+
+    <!-- fonts library -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap" rel="stylesheet">
+
+
     <script src="WWC.js" defer></script>
     <link rel="stylesheet" href="WWCstylesheet.css">
 </head>
 
 <body>
+    <header>
+        <div class="title">
+            <img src="images/d.php" class="img-fluid w-100" alt="Responsive image">
+            <h1 class="container-fluid">World Wide Coins</h1>
+        </div>
+        <div class="navbar">
+            <nav class="nav">
+                <button type="menu" class="btn home nav-link active">Home</button>
+                <button type="menu" class="btn reports nav-link disabled" aria-disabled="true">Live Reports</button>
+                <button type="menu" class="btn about nav-link">About</button>
+            </nav>
+            <div class="search">
+                <input type="search" placeholder="search">
+                <button type="button" class="btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="coins">
+            <div class="card-body">
+                <div class="row">
+                    <h5 class="card-title">Coin name</h5>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="live_reports">
+                        <label class="custom-control-label" for="live_reports"></label>
+                    </div>
+                </div>
+                <p class="card-text">Coin basic data</p>
+                <button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#more_info" aria-controls="more_info">More Info</button>
+                <div id="more_info" class="collapse">
+                        <img>
+                        <p class="USD">USD</p>
+                        <p class="EUR">EUR</p>
+                        <p class="ILS">ILS</p>
+                </div>
+            </div>
 
+        </section>
+        <section class="about">
+            <img src="" alt="">
+            <h2>Hallo</h2>
+            <p>bla bla bla</p>
+        </section>
+    </main>
 </body>
 
 </html>
