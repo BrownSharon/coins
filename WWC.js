@@ -17,16 +17,21 @@ $(() => {
         $(".coins").html("")
         $(".waiting-popup").show()
         $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
-            for (let coin = 0; coin < 50; coin++) {
+            for (let coin = 0; coin < 100; coin++) {
                 const currentCoin = coins[coin];
-                creatCoin(currentCoin, idNum)
-                idNum++
-                $(".waiting-popup").hide()
-            };
+                $.get("https://api.coingecko.com/api/v3/coins/" + currentCoin.id, function (info) {
 
+                    if (info.market_data.current_price.usd || info.market_data.current_price.eur || info.market_data.current_price.ils) {
+                        creatCoin(currentCoin, idNum)
+                        idNum++
+                    }
+                })
+
+            }
+            $(".waiting-popup").hide()
         })
     })
-    
+
 
 })
 
@@ -48,7 +53,7 @@ function creatCoin(currentCoin, idNum) {
     let coinToUSD = $("<p></p>").addClass("USD")
     let coinToEUR = $("<p></p>").addClass("ERU")
     let coinToILS = $("<p></p>").addClass("ILS")
-    
+
     // Combine everything together 
     $(".coins").append(coin)
     $(coin).append(coinRow)
@@ -66,63 +71,58 @@ function creatCoin(currentCoin, idNum) {
     $(contCoin).append(coinToILS)
     $(moreInfoContainer).append(imageCoin)
 
+
     // Handle the info button
+    let counter = 0
     $(moreInfoBTN).click(function (e) {
-       
-        let moreInfoCollapse = e.target.parentElement.lastChild
-        $(moreInfoCollapse).toggle()
+        counter++
+        if (counter % 2 == 1) {
+            let moreInfoCollapse = e.target.parentElement.lastChild
+            $(moreInfoCollapse).show()
 
-        let keys = Object.keys(localStorage)
+            let keys = Object.keys(localStorage)
 
-        let current = $(e.target).prev()
-        if (keys.length == 0) {
-            creatMoreInfoFromAPI(currentCoin.id, imageCoin, coinToUSD, coinToEUR, coinToILS)
-        } else {
+            let current = $(e.target).prev()
+
             keys.forEach(key => {
                 if (keys.find(key => key == $(current).text())) {
 
                     let value = JSON.parse(localStorage.getItem(key))
 
-                    if (checkTime(value.date)) {
+                    if ((new Date(value.date).getTime() + 120000) >= new Date().getTime()) {
                         // create more info from localStorage
                         $(imageCoin).attr("src", value.image)
                         $(coinToUSD).text(`USD: ${value.USD}$`)
                         $(coinToEUR).text(`EUR: ${value.EUR}£`)
                         $(coinToILS).text(`ILS: ${value.ILS}₪`)
                     } else {
-                        creatMoreInfoFromAPI(currentCoin.id, imageCoin, coinToUSD, coinToEUR, coinToILS)
+
+                        creatMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
 
                     }
                 } else {
-                    creatMoreInfoFromAPI(currentCoin.id, imageCoin, coinToUSD, coinToEUR, coinToILS )
+                    creatMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
 
                 }
 
             });
 
-
+        } else {
+            $(moreInfoCollapse).hide()
         }
+
     })
 
 }
 
-function checkTime(date) {
 
-    let now = new Date();
-    now = now.getTime()
-    if ((date + 2000) >= now) {
-        return true
-    } else { return false }
-}
-
-
-function creatMoreInfoFromAPI(id, imageCoin, coinToUSD, coinToEUR, coinToILS) {
+function creatMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS) {
 
     $(document).ready(function () {
         $(".waiting-popup").show()
         $.get("https://api.coingecko.com/api/v3/coins/" + id, function (info) {
 
-            console.log(info);
+
             $(imageCoin).attr("src", info.image.small)
             $(coinToUSD).text(`USD: ${info.market_data.current_price.usd}$`)
             $(coinToEUR).text(`EUR: ${info.market_data.current_price.eur}£`)
@@ -131,18 +131,19 @@ function creatMoreInfoFromAPI(id, imageCoin, coinToUSD, coinToEUR, coinToILS) {
             // save to localStorage
             let d = new Date()
 
-            localStorage.setItem(id, JSON.stringify({
-                image: info.image.small,
+            localStorage.setItem(name, JSON.stringify({
+
                 USD: info.market_data.current_price.usd,
                 EUR: info.market_data.current_price.eur,
                 ILS: info.market_data.current_price.ils,
-                date: d.getTime()
+                date: d,
+                image: info.image.small
             }))
             $(".waiting-popup").hide()
         })
     })
-    
-    
+
+
 }
 
 
