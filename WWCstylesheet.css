@@ -1,21 +1,11 @@
 * {
     margin: 0;
     padding: 0;
-    font
 }
-
-/* h1 {
-    background-image: url(imeges/d.php);
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
-} */
 
 .title {
     height: 40vh;
-    display: flex;
+    display: flex
 }
 
 h1 {
@@ -31,18 +21,24 @@ img {
 }
 
 .navbar {
-    background-color: rgb(247, 192, 110);
+    background-color: rgb(241, 172, 68);
 }
 
 .search>input {
     padding: 2px;
 }
 
+.coins {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
 .card-body {
     border: black 2px solid;
-    width: 22%;
+    width: 200px;
     margin: 1%;
-    height: 25vh;
+    
 }
 
 .row {
@@ -50,40 +46,53 @@ img {
     justify-content: space-between;
 }
 
-#more_info {
-    width: 100%;
-    border: black 2px solid;
-    background-color: white;
-    margin-top: 1vw;
-    display: grid;
-    grid-template-areas: "pic coin1" "pic coin2" "pic coin3";
-    align-items: center;
-    */
+.col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
-#more_info>img {
-    grid-area: pic;
+.cont {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    margin-top: 1vw;
     border: black 2px solid;
-    width: 90%;
-    height: 40%;
+}
+
+.cont>img {
+    padding: 10%;
     margin-left: 1vw;
+    margin-top: 1vw;
 }
 
 .USD {
-    grid-area: coin1;
-    text-align: right;
     margin-right: 1vw;
     margin-top: 1vh;
 }
 
 .EUR {
-    grid-area: coin2;
-    text-align: right;
     margin-right: 1vw;
 }
 
 .ILS {
-    grid-area: coin3;
-    text-align: right;
     margin-right: 1vw;
+}
+
+.about {
+    display: none;
+}
+
+.card-title {
+    font-weight: 900;
+    font-size: large;
+    color: rgb(241, 172, 68);
+}
+
+.card-text {
+    font-weight: 600;
+    font-size: medium;
 }
