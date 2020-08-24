@@ -38,7 +38,6 @@ img {
     border: black 2px solid;
     width: 200px;
     margin: 1%;
-    
 }
 
 .row {
@@ -95,4 +94,26 @@ img {
 .card-text {
     font-weight: 600;
     font-size: medium;
+}
+
+.waiting-coin {
+    background-color: black;
+    border-radius: 100px;
+    height: 200px;
+    width: 200px;
+    opacity: 1;
+    border: 5px solid rgb(241, 172, 68);
+    z-index: 2;
+}
+
+.waiting-popup {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0);
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }

@@ -1,4 +1,5 @@
 $(() => {
+    $(".waiting-popup").hide()
     // Handle the navigation 
     $(".aboutBTN").click(function (e) {
         $(".about").css("display", "flex")
@@ -12,15 +13,20 @@ $(() => {
 
     let idNum = 0
     // Display the coins
+    $(document).ready(function () {
+        $(".coins").html("")
+        $(".waiting-popup").show()
+        $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
+            for (let coin = 0; coin < 50; coin++) {
+                const currentCoin = coins[coin];
+                creatCoin(currentCoin, idNum)
+                idNum++
+                $(".waiting-popup").hide()
+            };
 
-    $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
-        for (let coin = 0; coin < 10; coin++) {
-            const currentCoin = coins[coin];
-            creatCoin(currentCoin, idNum)
-            idNum++
-
-        };
+        })
     })
+    
 
 })
 
@@ -61,18 +67,8 @@ function creatCoin(currentCoin, idNum) {
     $(moreInfoContainer).append(imageCoin)
 
     // Handle the info button
-
     $(moreInfoBTN).click(function (e) {
-        // let moreInfoCollapse = e.target.parentElement.lastChild
-        // switch (moreInfoCollapse.className) {
-        //     case collapse:
-        //         break;
-        //     case collapsing:
-        //         break;
-        //     default:
-        //         break;
-        // }
-        
+       
         let moreInfoCollapse = e.target.parentElement.lastChild
         $(moreInfoCollapse).toggle()
 
@@ -121,27 +117,32 @@ function checkTime(date) {
 
 
 function creatMoreInfoFromAPI(id, imageCoin, coinToUSD, coinToEUR, coinToILS) {
-    
 
-    $.get("https://api.coingecko.com/api/v3/coins/" + id, function (info) {
+    $(document).ready(function () {
+        $(".waiting-popup").show()
+        $.get("https://api.coingecko.com/api/v3/coins/" + id, function (info) {
 
-    console.log(info);
-        $(imageCoin).attr("src", info.image.small)
-        $(coinToUSD).text(`USD: ${info.market_data.current_price.usd}$`)
-        $(coinToEUR).text(`EUR: ${info.market_data.current_price.eur}£`)
-        $(coinToILS).text(`ILS: ${info.market_data.current_price.ils}₪`)
+            console.log(info);
+            $(imageCoin).attr("src", info.image.small)
+            $(coinToUSD).text(`USD: ${info.market_data.current_price.usd}$`)
+            $(coinToEUR).text(`EUR: ${info.market_data.current_price.eur}£`)
+            $(coinToILS).text(`ILS: ${info.market_data.current_price.ils}₪`)
 
-        // save to localStorage
-        let d = new Date()
+            // save to localStorage
+            let d = new Date()
 
-        localStorage.setItem(id, JSON.stringify({
-            image: info.image.small,
-            USD: info.market_data.current_price.usd,
-            EUR: info.market_data.current_price.eur,
-            ILS: info.market_data.current_price.ils,
-            date: d.getTime()
-        }))
+            localStorage.setItem(id, JSON.stringify({
+                image: info.image.small,
+                USD: info.market_data.current_price.usd,
+                EUR: info.market_data.current_price.eur,
+                ILS: info.market_data.current_price.ils,
+                date: d.getTime()
+            }))
+            $(".waiting-popup").hide()
+        })
     })
+    
+    
 }
 
 
