@@ -110,10 +110,62 @@ img {
     position: fixed;
     height: 100vh;
     width: 100vw;
-    background-color: rgba(0, 0, 0, 0);
-   
+    background-color: rgba(39, 38, 38, 0.527);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1;
+}
+
+.screen-container {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.527);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    
+}
+
+.handle-toggle {
+    background-color: white;
+    width: 50vw;
+    opacity: 1;
+    border: 5px solid rgb(241, 172, 68);
+    z-index: 4;
+}
+
+h3 {
+    background-color: rgb(241, 172, 68);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+    margin-top: 0;
+
+}
+
+.coin-choice {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2%;
+    border-bottom: 2px solid rgb(241, 172, 68);
+    ;
+}
+
+.decision-buttons {
+    background-color: rgb(241, 172, 68);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2%;
+}
+
+.decision-buttons>button {
+    padding: 4px;
+    border-radius: 6px;
 }
