@@ -5,18 +5,67 @@ $(() => {
     creatHomPage()
 
     // Handle the navigation 
-    $(".aboutBTN").click(function (e) {
-        creatAboutPage()
+    $(".aboutBTN").click(creatAboutPage)
+
+    $(".homeBTN").click(creatHomPage)
+
+    // Search handle
+
+
+    // option 1 - the exact project demand
+    
+    $(".searchBTN").click((e) => {
+       
+        let searchINP = $(e.target).parent().prev()[0]
+        searchINP = $(searchINP).val()
+
+        let coins = $(".card-body")
+        let counter = 0
+        for (const coin of coins) {
+
+            let coinTitle = $(coin).find(".card-title")[0]
+            coinTitle = $(coinTitle).text();
+            
+            if (coinTitle == searchINP || searchINP == "" ){
+                $(coin).show()
+                $(".msg").remove()
+                counter++
+            } else {
+                $(coin).hide()
+            }
+        }
+
+        if (counter == 0) {
+            creatErrorSearchMSG()
+        }
     })
 
-    $(".homeBTN").click(function (e) {
+     // option 2 - Partial and on-going search
+    
+     // $(".searchINP").on("input",(e) => {
+        
+    //     let coins = $(".card-body")
+    //     let counter = 0
+    //     for (const coin of coins) {
 
-        creatHomPage()
-    })
+    //         let coinTitle = $(coin).find(".card-title")[0]
+    //         coinTitle = $(coinTitle).text();
 
+    //         if (coinTitle.indexOf(e.target.value) > -1) {
+    //             $(coin).show()
+    //             counter++
+    //         } else {
+    //             $(coin).hide()
+    //         }
 
+    //     }
 
+    //     if (counter == 0) {
 
+    //         let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
+    //         $("main").append(msg)
+    //     }
+    // })
 
 })
 
@@ -27,10 +76,12 @@ function creatHomPage() {
 
     $(document).ready(function () {
         $("main").html("")
+        
         creatWaitingPopup()
         $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
             for (let coin = 0; coin < 100; coin++) {
-                let currentCoin = coins[coin];
+                let currentCoin = $(coins)[coin];
+
                 $.get("https://api.coingecko.com/api/v3/coins/" + currentCoin.id, function (info) {
 
                     if (info.market_data.current_price.usd || info.market_data.current_price.eur || info.market_data.current_price.ils) {
@@ -163,7 +214,6 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
     $(popupT).append(title)
     $(popupT).append(choices)
 
-    console.log(checkedTogglesArray.length);
     for (let i = 0; i < checkedTogglesArray.length; i++) {
         let toggleItem = checkedTogglesArray[i];
         creatToggleItemList(toggleItem)
@@ -206,10 +256,19 @@ function creatWaitingPopup() {
     $(div).append(img)
 }
 
+function creatErrorSearchMSG() {
+    
+    let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
+   
+    $("main").append(msg)
+  
+   
+}
+
 function creatArrayOfCheckedToggles() {
     let checkedTogglesArray = []
 
-    let toggles = document.querySelectorAll(`.coinToggle`)
+    let toggles = $(`.coinToggle`)
 
     for (const toggle of toggles) {
         if (toggle.checked) {
@@ -257,10 +316,10 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
 }
 
 function handlePopupToggle(lastChecked, checkedToggleArray) {
-    console.log(lastChecked);
-    $(".toggle-item").change( ()=> {
+
+    $(".toggle-item").change(() => {
         let currentCheckedTogglesArray = []
-        let toggles = document.querySelectorAll(`.toggle-item`)
+        let toggles = $(`.toggle-item`)
 
         for (const toggle of toggles) {
             if (toggle.checked) {
@@ -270,12 +329,9 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
                 currentCheckedTogglesArray.push({ name: name, number: curCoinNum })
             }
-            
         }
-        console.log(currentCheckedTogglesArray);
-        console.log(currentCheckedTogglesArray.length);
 
-         checkedToggleArray = currentCheckedTogglesArray
+        checkedToggleArray = currentCheckedTogglesArray
     })
 
     $(".saveBTN").click(() => {
@@ -287,14 +343,14 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
             $(".screen-container").remove()
 
             // clear all toggles
-            let toggles = document.querySelectorAll(".coinToggle")
+            let toggles = $(".coinToggle")
 
             for (const toggle of toggles) {
                 $(toggle).prop("checked", false)
             }
 
             // checked the toggles from the list
-            let coins = document.querySelectorAll(".card-body")
+            let coins = $(".card-body")
 
             for (const toggle of checkedToggleArray) {
                 let num = toggle.number.replace(/\D/g, '')
@@ -306,17 +362,17 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
         }
 
         checkedToggleArray = []
-       
+
     })
 
     $(".cancelBTN").click(() => {
 
-        let coins = document.querySelectorAll(".card-body")
+        let coins = $(".card-body")
         let num = lastChecked.number.replace(/\D/g, '')
         let coin = coins.item(num)
-       
+
         coin = $(coin).find("input")
-        
+
         $(coin).prop("checked", false)
 
         $(".screen-container").remove()
@@ -326,13 +382,13 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 }
 
 function handleHomepageToggles(thisToggle) {
-    
+
     $(thisToggle).change(e => {
         let checkedTogglesArray = creatArrayOfCheckedToggles()
         console.log(checkedTogglesArray.length);
         if (checkedTogglesArray.length <= 5) {
             checkedTogglesArray = creatArrayOfCheckedToggles()
-        } else if (checkedTogglesArray.length = 6){
+        } else if (checkedTogglesArray.length = 6) {
             checkedTogglesArray.pop()
             let name = $(e.target.parentElement.parentElement).next().text()
 
@@ -340,16 +396,16 @@ function handleHomepageToggles(thisToggle) {
             let lastChecked = { name: name, number: curCoinNum }
 
             creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
-        } else if (checkedTogglesArray.length > 6){
+        } else if (checkedTogglesArray.length > 6) {
             checkedTogglesArray.pop()
         }
-
-        console.log(checkedTogglesArray);
-
 
     })
 
 }
+
+
+
 
 
 
