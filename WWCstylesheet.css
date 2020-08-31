@@ -3,24 +3,57 @@
     padding: 0;
 }
 
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    perspective: 1px;
+    transform-style: preserve-3d;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* title page */
+
 .title {
     height: 40vh;
-    display: flex
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {
-    position: absolute;
-    padding: 3%;
+    position: relative;
     text-align: center;
     font-weight: bolder;
     font-size: 60px;
+    margin: 5%;
+    padding: 50px;
+    width: 50%;
+    background: rgba(0, 0, 0, 0);
+    color: white;
 }
 
-img {
-    opacity: 0.7;
+.parallax1 {
+    /* The image used */
+    background-image: url("images/parallax/bildings_black_white.jpg");
+    /* Set a specific height */
+    height: 100%;
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -10;
 }
+
+/* navigation and search  */
 
 .navbar {
+    position: relative;
     background-color: rgb(241, 172, 68);
     height: 5vh;
     margin: 0;
@@ -30,10 +63,15 @@ img {
     padding: 2px;
 }
 
+/* main content */
+
 main {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    align-items: stretch;
+    position: relative;
     margin: 0;
     padding: 0;
 }
@@ -41,7 +79,11 @@ main {
 .card-body {
     border: black 2px solid;
     width: 200px;
-    margin: 1%;
+    margin: 1.5%;
+    background-color: white;
+    text-align: center;
+    font-weight: bolder;
+    color: black;
 }
 
 .row {
@@ -53,7 +95,7 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .cont {
@@ -206,4 +248,13 @@ h2 {
     margin: 0;
     border: 2px solid rgb(241, 172, 68);
     padding: 3%;
+}
+
+.msg {
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
+    margin: 5%;
+    font-weight: 700;
+    background-color: rgb(241, 172, 68);
 }
