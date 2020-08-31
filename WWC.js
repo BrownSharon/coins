@@ -76,7 +76,7 @@ function creatHomPage() {
 
     $(document).ready(function () {
         $("main").html("")
-        
+        $(".searchINP").attr("disabled", false)
         creatWaitingPopup()
         $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
             for (let coin = 0; coin < 100; coin++) {
@@ -99,6 +99,7 @@ function creatHomPage() {
 function creatAboutPage() {
     $(document).ready(function () {
         $("main").html("")
+        $(".searchINP").attr("disabled", true)
         creatWaitingPopup()
         // let container = $("<div></div>").addClass("container")
         let title = $("<h2></h2>").text("A little bit About this site")
