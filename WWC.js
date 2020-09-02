@@ -41,50 +41,68 @@ $(() => {
 
 })
 
-// Creat Functions
+//////////////////////////////////////////////////// Creat Functions //////////////////////////////////////////////////////
 
 function creatHomPage() {
     let idNum = 0
 
     $(document).ready(function () {
+
+        // Clean the main section from other page content
         $("main").html("")
+
+        // Activate the search field 
         $(".searchINP").attr("disabled", false)
+
+        // Pop the waiting popup while getting the data from API
         creatWaitingPopup()
+
+        // Getting the data from API
         $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
             for (let coin = 0; coin < 100; coin++) {
                 let currentCoin = $(coins)[coin];
 
+                // Make sure the coins that shows in the page will be with More Info data from the beginning 
                 $.get("https://api.coingecko.com/api/v3/coins/" + currentCoin.id, function (info) {
 
                     if (info.market_data.current_price.usd || info.market_data.current_price.eur || info.market_data.current_price.ils) {
+
+                        // Creating the coins cards 
                         creatCoin(currentCoin, idNum)
                         idNum++
                     }
                 })
 
             }
+
+            // Delete the waiting popup 
             $(".waiting-popup").remove()
         })
     })
 }
 
 function creatAboutPage() {
+
     $(document).ready(function () {
+
+        // Clean the main section from other page content 
         $("main").html("")
+
+        // Disabled the search field 
         $(".searchINP").attr("disabled", true)
-        creatWaitingPopup()
-        // let container = $("<div></div>").addClass("container")
+
+        // Creat the elements in the page
         let title = $("<h2></h2>").text("A little bit About this site")
         let section = $("<div></div>").addClass("section")
         let img = $("<img>").addClass("about-img").attr("src", "").attr("alt", "")
         let mainInfo = $("<p></p>").addClass("about-info").text("")
 
-        // $("main").append(container)
+        // Combine everything together
         $("main").append(title)
         $("main").append(section)
         $(section).append(img)
         $(section).prepend(mainInfo)
-        $(".waiting-popup").remove()
+
     })
 }
 
@@ -124,48 +142,60 @@ function creatCoin(currentCoin, idNum) {
     $(contCoin).append(coinToILS)
     $(moreInfoContainer).append(imageCoin)
 
+    // Handle More Info button
 
-    // Handle the info button
-    let counter = 0
     $(moreInfoBTN).click(function (e) {
-        counter++
+        // creat array from localStorage keys
+        let keys = Object.keys(localStorage)
 
-        if (counter % 2 == 1) {
-            let moreInfoCollapse = e.target.parentElement.lastChild
-            $(moreInfoCollapse).show()
+        // Extract coin name of the card been clicked
+        let thisCoinName = $(e.target).prev().text()
 
-            let keys = Object.keys(localStorage)
 
-            let current = $(e.target).prev()
-            if (keys.length == 0) {
-                getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
-            }
+        // If localStorage empty, fetch the info from API
+        if (keys.length == 0) {
+            getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
+        } else {
+            // If localStorage full, check if there is a key with the same name of the coin been clicked 
+            let found = false
             keys.forEach(key => {
-                if (keys.find(key => key == $(current).text())) {
-
+                if (key == thisCoinName) {
+                    found = true
+                    // If found extract data from localStorage
                     let value = JSON.parse(localStorage.getItem(key))
 
-                    if ((new Date(value.date).getTime() + 120000) >= new Date().getTime()) {
-                        // create more info from localStorage
+                    let localStorageDate = new Date(value.date).getTime()
+
+                    let nowDate = new Date().getTime()
+
+
+                    console.log(localStorageDate, nowDate);
+                    // Check if passed less then 2 minutes 
+                    if ((localStorageDate + 120000) >= nowDate) {
+                        console.log("value")
+                        // Create data from localStorage
                         $(imageCoin).attr("src", value.image)
                         $(coinToUSD).text(`USD: ${value.USD}$`)
                         $(coinToEUR).text(`EUR: ${value.EUR}£`)
                         $(coinToILS).text(`ILS: ${value.ILS}₪`)
                     } else {
-
+                        // if passed more then 2 minutes create the data from API
                         getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
 
                     }
-                } else {
-                    getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
-
                 }
-
             })
 
-        } else {
-            $(moreInfoCollapse).hide()
+            // If there wasn't any key equal to coin name been clicked
+            if (!found) {
+                console.log("test2");
+                getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
+            }
+
         }
+
+        // Show/hide the collapse element
+        $(moreInfoCollapse).toggle()
 
     })
 
@@ -219,7 +249,7 @@ function creatToggleItemList(toggleItem) {
     $(choice).append(switchT)
     $(switchT).append(inpT)
     $(switchT).append(labelT)
-   
+
 }
 
 function creatWaitingPopup() {
@@ -246,7 +276,7 @@ function creatArrayOfCheckedToggles() {
 
     for (const toggle of toggles) {
         if (toggle.checked) {
-            
+
             let name = $(toggle).parent().parent().next().text()
             checkedTogglesArray.push({ name: name, number: toggle.id })
         }
@@ -260,9 +290,10 @@ function creatArrayOfCheckedToggles() {
 // Handle Function
 
 function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS) {
-
+    console.log("test");
     $(document).ready(function () {
         creatWaitingPopup()
+
         $.get("https://api.coingecko.com/api/v3/coins/" + id, function (info) {
 
             $(imageCoin).attr("src", info.image.small)
@@ -271,14 +302,14 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
             $(coinToILS).text(`ILS: ${info.market_data.current_price.ils}₪`)
 
             // save to localStorage
-            let d = new Date()
+            let dateInfo = new Date()
+            dateInfo = dateInfo.toString()
 
             localStorage.setItem(name, JSON.stringify({
-
+                date: dateInfo,
                 USD: info.market_data.current_price.usd,
                 EUR: info.market_data.current_price.eur,
                 ILS: info.market_data.current_price.ils,
-                date: d,
                 image: info.image.small
             }))
             $(".waiting-popup").remove()
@@ -303,12 +334,12 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
             }
         }
         console.log(currentCheckedTogglesArray);
-        
-        
+
+
     })
 
     $(".saveBTN").click(() => {
-       
+
         if (currentCheckedTogglesArray.length > 5) {
             $("h3").css("color", "red").css("font-weight", 900)
         }
@@ -317,7 +348,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
             // clear all toggles
             let coins = $(".card-body")
-            
+
             for (const toggle of checkedToggleArray) {
                 let num = toggle.number.replace(/\D/g, '')
                 let coin = coins[num]
@@ -325,7 +356,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
                 $(coin).prop("checked", false)
             }
             checkedToggleArray = []
-            
+
             for (const toggle of currentCheckedTogglesArray) {
                 let num = toggle.number.replace(/\D/g, '')
                 let coin = coins[num]
@@ -336,7 +367,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
         }
 
         $(".screen-container").remove()
-       
+
 
     })
 
@@ -351,7 +382,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
         $(coin).prop("checked", false)
 
         $(".screen-container").remove()
-        
+
         checkedToggleArray = []
     })
 
@@ -361,15 +392,15 @@ function handleHomepageToggles(thisToggle) {
     let checkedTogglesArray = []
     $(thisToggle).change(e => {
         checkedTogglesArray = creatArrayOfCheckedToggles()
-        
+
         if (checkedTogglesArray.length == 6) {
             checkedTogglesArray.pop()
             let name = $(e.target).parent().parent().next().text()
 
-            let lastChecked = { name: name, number: e.target.id}
+            let lastChecked = { name: name, number: e.target.id }
             console.log(checkedTogglesArray)
             creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
-        } 
+        }
 
     })
 
