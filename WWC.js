@@ -10,62 +10,34 @@ $(() => {
     $(".homeBTN").click(creatHomPage)
 
     // Search handle
+    // Partial and on-going search
 
-
-    // option 1 - the exact project demand
-    
-    $(".searchBTN").click((e) => {
-       
-        let searchINP = $(e.target).parent().prev()[0]
-        searchINP = $(searchINP).val()
+    $(".searchINP").on("input", (e) => {
 
         let coins = $(".card-body")
         let counter = 0
+
+
         for (const coin of coins) {
 
             let coinTitle = $(coin).find(".card-title")[0]
             coinTitle = $(coinTitle).text();
-            
-            if (coinTitle == searchINP || searchINP == "" ){
+
+            if ((coinTitle.indexOf(e.target.value) > -1) || e.target == "") {
                 $(coin).show()
                 $(".msg").remove()
                 counter++
             } else {
                 $(coin).hide()
             }
+
         }
 
         if (counter == 0) {
+
             creatErrorSearchMSG()
         }
     })
-
-     // option 2 - Partial and on-going search
-    
-     // $(".searchINP").on("input",(e) => {
-        
-    //     let coins = $(".card-body")
-    //     let counter = 0
-    //     for (const coin of coins) {
-
-    //         let coinTitle = $(coin).find(".card-title")[0]
-    //         coinTitle = $(coinTitle).text();
-
-    //         if (coinTitle.indexOf(e.target.value) > -1) {
-    //             $(coin).show()
-    //             counter++
-    //         } else {
-    //             $(coin).hide()
-    //         }
-
-    //     }
-
-    //     if (counter == 0) {
-
-    //         let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
-    //         $("main").append(msg)
-    //     }
-    // })
 
 })
 
@@ -210,7 +182,7 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
     let title = $("<h3></h3>").text("Choose 5 out of 6 for Live reports")
     let choices = $("<div></div>").addClass("choices")
 
-    $("body").prepend(container)
+    $("body").append(container)
     $(container).append(popupT)
     $(popupT).append(title)
     $(popupT).append(choices)
@@ -247,6 +219,7 @@ function creatToggleItemList(toggleItem) {
     $(choice).append(switchT)
     $(switchT).append(inpT)
     $(switchT).append(labelT)
+   
 }
 
 function creatWaitingPopup() {
@@ -258,12 +231,12 @@ function creatWaitingPopup() {
 }
 
 function creatErrorSearchMSG() {
-    
+
     let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
-   
+
     $("main").append(msg)
-  
-   
+
+
 }
 
 function creatArrayOfCheckedToggles() {
@@ -273,10 +246,9 @@ function creatArrayOfCheckedToggles() {
 
     for (const toggle of toggles) {
         if (toggle.checked) {
-            let name = $(toggle.parentElement.parentElement).next().text()
-
-            let curCoinNum = toggle.id
-            checkedTogglesArray.push({ name: name, number: curCoinNum })
+            
+            let name = $(toggle).parent().parent().next().text()
+            checkedTogglesArray.push({ name: name, number: toggle.id })
         }
 
 
@@ -317,52 +289,54 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
 }
 
 function handlePopupToggle(lastChecked, checkedToggleArray) {
-
+    let currentCheckedTogglesArray = []
     $(".toggle-item").change(() => {
-        let currentCheckedTogglesArray = []
+        currentCheckedTogglesArray = []
         let toggles = $(`.toggle-item`)
 
         for (const toggle of toggles) {
             if (toggle.checked) {
-                let name = $(toggle.parentElement).prev().text()
 
-                let curCoinNum = toggle.id
+                let name = $(toggle).parent().prev().text()
 
-                currentCheckedTogglesArray.push({ name: name, number: curCoinNum })
+                currentCheckedTogglesArray.push({ name: name, number: toggle.id })
             }
         }
-
-        checkedToggleArray = currentCheckedTogglesArray
+        console.log(currentCheckedTogglesArray);
+        
+        
     })
 
     $(".saveBTN").click(() => {
-
-        if (checkedToggleArray.length > 5) {
+       
+        if (currentCheckedTogglesArray.length > 5) {
             $("h3").css("color", "red").css("font-weight", 900)
         }
         else {
             $(".screen-container").remove()
 
             // clear all toggles
-            let toggles = $(".coinToggle")
-
-            for (const toggle of toggles) {
-                $(toggle).prop("checked", false)
-            }
-
-            // checked the toggles from the list
             let coins = $(".card-body")
-
+            
             for (const toggle of checkedToggleArray) {
                 let num = toggle.number.replace(/\D/g, '')
-                let coin = coins.item(num)
+                let coin = coins[num]
+                coin = $(coin).find("input")
+                $(coin).prop("checked", false)
+            }
+            checkedToggleArray = []
+            
+            for (const toggle of currentCheckedTogglesArray) {
+                let num = toggle.number.replace(/\D/g, '')
+                let coin = coins[num]
                 coin = $(coin).find("input")
                 $(coin).prop("checked", true)
             }
 
         }
 
-        checkedToggleArray = []
+        $(".screen-container").remove()
+       
 
     })
 
@@ -370,36 +344,32 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
         let coins = $(".card-body")
         let num = lastChecked.number.replace(/\D/g, '')
-        let coin = coins.item(num)
+        let coin = coins[num]
 
         coin = $(coin).find("input")
 
         $(coin).prop("checked", false)
 
         $(".screen-container").remove()
+        
         checkedToggleArray = []
     })
 
 }
 
 function handleHomepageToggles(thisToggle) {
-
+    let checkedTogglesArray = []
     $(thisToggle).change(e => {
-        let checkedTogglesArray = creatArrayOfCheckedToggles()
-        console.log(checkedTogglesArray.length);
-        if (checkedTogglesArray.length <= 5) {
-            checkedTogglesArray = creatArrayOfCheckedToggles()
-        } else if (checkedTogglesArray.length = 6) {
+        checkedTogglesArray = creatArrayOfCheckedToggles()
+        
+        if (checkedTogglesArray.length == 6) {
             checkedTogglesArray.pop()
-            let name = $(e.target.parentElement.parentElement).next().text()
+            let name = $(e.target).parent().parent().next().text()
 
-            let curCoinNum = e.target.id
-            let lastChecked = { name: name, number: curCoinNum }
-
+            let lastChecked = { name: name, number: e.target.id}
+            console.log(checkedTogglesArray)
             creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
-        } else if (checkedTogglesArray.length > 6) {
-            checkedTogglesArray.pop()
-        }
+        } 
 
     })
 
