@@ -10,7 +10,6 @@ html {
 
 body {
     height: 100%;
-    perspective: 1px;
     transform-style: preserve-3d;
     overflow-x: hidden;
     overflow-y: auto;
@@ -70,7 +69,6 @@ main {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    align-items: stretch;
     position: relative;
     margin: 0;
     padding: 0;
@@ -78,7 +76,9 @@ main {
 
 .card-body {
     border: black 2px solid;
-    width: 200px;
+    max-width: 300px;
+    width: 20vw;
+    min-width: 200px;
     margin: 1.5%;
     background-color: white;
     text-align: center;
@@ -156,26 +156,29 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 3;
 }
 
 .screen-container {
     position: fixed;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     background-color: rgba(0, 0, 0, 0.527);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    top: 0;
+    left: 0;
 }
 
 .handle-toggle {
+   
     background-color: white;
     width: 50vw;
     opacity: 1;
     border: 5px solid rgb(241, 172, 68);
-    z-index: 4;
+   
+    
 }
 
 h3 {
