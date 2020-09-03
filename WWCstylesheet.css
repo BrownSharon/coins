@@ -67,7 +67,15 @@ h1 {
     padding: 2px;
 }
 
-/* main content */
+/* error msg for search */
+.msg {
+    font-size: 40px;
+    text-align: center;
+    width: 100%;
+    margin: 5%;
+    font-weight: 700;
+    background-color: rgb(241, 172, 68);
+}
 
 main {
     width: 100%;
@@ -79,6 +87,9 @@ main {
     padding: 0;
 }
 
+/* home page - coins page content */
+
+/* coin card */
 .card-body {
     border: black 2px solid;
     max-width: 40vh;
@@ -103,18 +114,29 @@ main {
     height: 35px;
 }
 
-.col {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.card-title {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    font-weight: 900;
+    font-size: large;
+    color: rgb(241, 172, 68);
 }
 
-
+.card-text {
+    font-weight: 600;
+    font-size: medium;
+    min-height: 45px;
+}
 
 .moreInfoBTN{
     max-width: 50%;
+    position: relative;
+    bottom: 0;
+    left: 25%;
 }
+
+/* more info collapse */
 
 .cont {
     display: flex;
@@ -124,6 +146,13 @@ main {
     background-color: white;
     margin-top: 1vw;
     border: black 2px solid;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .cont>img {
@@ -145,21 +174,7 @@ main {
     margin-right: 1vw;
 }
 
-
-.card-title {
-    width: 50%;
-    margin: 0;
-    padding: 0;
-    font-weight: 900;
-    font-size: large;
-    color: rgb(241, 172, 68);
-}
-
-.card-text {
-    font-weight: 600;
-    font-size: medium;
-    min-height: 45px;
-}
+/* waiting popup */
 
 .waiting-coin {
     background-color: black;
@@ -182,6 +197,8 @@ main {
     z-index: 3;
 }
 
+/* handle toggle popup */
+
 .screen-container {
     position: fixed;
     height: 100%;
@@ -200,6 +217,8 @@ main {
     opacity: 1;
     border: 5px solid rgb(241, 172, 68);
 }
+
+/* content of toggle popup */
 
 h3 {
     background-color: rgb(241, 172, 68);
@@ -232,6 +251,8 @@ h3 {
     padding: 4px;
     border-radius: 6px;
 }
+
+/* about page content */
 
 h2 {
     background-color: rgb(240, 116, 59);
@@ -273,16 +294,9 @@ h2 {
     padding: 3%;
 }
 
-.msg {
-    font-size: 40px;
-    text-align: center;
-    width: 100%;
-    margin: 5%;
-    font-weight: 700;
-    background-color: rgb(241, 172, 68);
-}
+/* toggle switch */
 
-/* The switch - the box around the slider */
+    /* The switch - the box around the slider */
 .switch {
     position: relative;
     display: inline-block;
@@ -290,14 +304,14 @@ h2 {
     height: 20px;
   }
   
-  /* Hide default HTML checkbox */
+    /* Hide default HTML checkbox */
   .switch input {
     opacity: 0;
     width: 0;
     height: 0;
   }
   
-  /* The slider */
+    /* The slider */
   .slider {
     position: absolute;
     cursor: pointer;
@@ -337,7 +351,7 @@ h2 {
     transform: translateX(12px);
   }
 
-  /* Rounded sliders */
+    /* Rounded sliders */
 .slider.round {
     border-radius: 20px;
   }

@@ -15,34 +15,41 @@ $(() => {
     $(".searchINP").on("input", (e) => {
 
         let coins = $(".card-body")
-        let counter = 0
+        let coinInList = false
 
-
+        // Check all coins in page 
         for (const coin of coins) {
 
             let coinTitle = $(coin).find(".card-title")[0]
             coinTitle = $(coinTitle).text();
 
+            // If the string in input is part of the coin name 
             if ((coinTitle.indexOf(e.target.value) > -1) || e.target == "") {
+                // Shoe the coin that match
                 $(coin).show()
                 $(".msg").remove()
-                counter++
+                coinInList = true
             } else {
+                // Hide the coin if not
                 $(coin).hide()
             }
 
         }
+        // If the string in input not match to any coin in page, display error msg
+        if (!coinInList) {
+            $("main").html("")
 
-        if (counter == 0) {
+            let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
 
-            creatErrorSearchMSG()
+            $("main").append(msg)
         }
     })
 
 })
 
-//////////////////////////////////////////////////// Creat Functions //////////////////////////////////////////////////////
+// // // // // // Home page function // // // // // //
 
+// Creating the home page\coins page from API 
 function creatHomPage() {
     let idNum = 0
 
@@ -81,31 +88,16 @@ function creatHomPage() {
     })
 }
 
-function creatAboutPage() {
+// Creating the pop up the pop while waiting to fetch the data from API 
+function creatWaitingPopup() {
+    let div = $("<div></div>").addClass("waiting-popup")
+    let img = $("<img>").addClass("waiting-coin").attr("src", "images/1716e77877197a3958cd656574820ee1.gif").attr("alt", "progress bar")
 
-    $(document).ready(function () {
-
-        // Clean the main section from other page content 
-        $("main").html("")
-
-        // Disabled the search field 
-        $(".searchINP").attr("disabled", true)
-
-        // Creat the elements in the page
-        let title = $("<h2></h2>").text("A little bit About this site")
-        let section = $("<div></div>").addClass("section")
-        let img = $("<img>").addClass("about-img").attr("src", "").attr("alt", "")
-        let mainInfo = $("<p></p>").addClass("about-info").text("")
-
-        // Combine everything together
-        $("main").append(title)
-        $("main").append(section)
-        $(section).append(img)
-        $(section).prepend(mainInfo)
-
-    })
+    $("body").prepend(div)
+    $(div).append(img)
 }
 
+// Creating each coin with all it's fetchers
 function creatCoin(currentCoin, idNum) {
 
     // Create all the elements in the task
@@ -147,7 +139,7 @@ function creatCoin(currentCoin, idNum) {
     // Handle More Info button
 
     $(moreInfoBTN).click(function (e) {
-        // creat array from localStorage keys
+        // Creat array from localStorage keys
         let keys = Object.keys(localStorage)
 
         // Extract coin name of the card been clicked
@@ -181,7 +173,7 @@ function creatCoin(currentCoin, idNum) {
                         $(coinToEUR).text(`EUR: ${value.EUR}£`)
                         $(coinToILS).text(`ILS: ${value.ILS}₪`)
                     } else {
-                        // if passed more then 2 minutes create the data from API
+                        // If passed more then 2 minutes create the data from API
                         getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
 
                     }
@@ -204,9 +196,97 @@ function creatCoin(currentCoin, idNum) {
     // Handle the toggle switch
 
     handleHomepageToggles(toggleInp)
-    
+
 }
 
+// Fetch and place in variable the data from API and save to localStorage 
+function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS) {
+    
+    $(document).ready(function () {
+        // Pop the waiting popup while fetching the data from Api
+        creatWaitingPopup()
+
+        // Go to the API
+        $.get("https://api.coingecko.com/api/v3/coins/" + id, function (info) {
+
+            // Placing the data API in the collapse elements 
+            $(imageCoin).attr("src", info.image.small)
+            $(coinToUSD).text(`USD: ${info.market_data.current_price.usd}$`)
+            $(coinToEUR).text(`EUR: ${info.market_data.current_price.eur}£`)
+            $(coinToILS).text(`ILS: ${info.market_data.current_price.ils}₪`)
+
+            // Save to localStorage with date 
+            let dateInfo = new Date()
+            dateInfo = dateInfo.toString()
+
+            localStorage.setItem(name, JSON.stringify({
+                date: dateInfo,
+                USD: info.market_data.current_price.usd,
+                EUR: info.market_data.current_price.eur,
+                ILS: info.market_data.current_price.ils,
+                image: info.image.small
+            }))
+
+            // Remove the waiting popup 
+            $(".waiting-popup").remove()
+        })
+    })
+
+
+}
+
+// Managing the toggles status checked\not in array and pop the toggles manage popup in the 6th checked toggle   
+function handleHomepageToggles(thisToggle) {
+    
+    // Creat empty array to manage the checked toggles
+    let checkedTogglesArray = []
+
+    // When clicking and changing toggle status
+    $(thisToggle).change(e => {
+
+        // Place in the array all the toggles that checked in the var
+        checkedTogglesArray = creatArrayOfCheckedToggles()
+
+        // Check if the array contain more then 5 elements 
+        if (checkedTogglesArray.length == 6) {
+
+            // Creat an object that contain the last coin that it's toggle was prest for canceling option  
+            let name = $(e.target).parent().parent().parent().next().text()
+
+            let lastChecked = { name: name, number: e.target.id }
+
+            // Pop the managing toggles popup
+            creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
+        }
+
+    })
+
+}
+
+// Creat array of checked toggles in coin page
+function creatArrayOfCheckedToggles() {
+    // Creat an empty array
+    let togglesArray = []
+
+    let toggles = $(`.coinToggle`)
+
+    // Check all toggles status of the coins in page 
+    for (const toggle of toggles) {
+        
+        // If the toggle status is checked 
+        if (toggle.checked) {
+
+            // Push the specific coin data to array
+            let name = $(toggle).parent().parent().parent().next().text()
+            togglesArray.push({ name: name, number: toggle.id })
+        }
+
+    }
+    // Return the array
+    return togglesArray
+}
+
+// creat the managing toggles popup 
 function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
 
     let container = $("<div></div>").addClass("screen-container")
@@ -219,11 +299,12 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
     $(popupT).append(title)
     $(popupT).append(choices)
 
+    // Creat the list of coins from the checked toggle array
     for (let i = 0; i < checkedTogglesArray.length; i++) {
         let toggleItem = checkedTogglesArray[i];
         creatToggleItemList(toggleItem)
     }
-    
+
 
     let buttonsDiv = $("<div></div>").addClass("decision-buttons")
     let saveBTN = $("<button></button>").addClass("saveBTN btn-success").text("save")
@@ -233,10 +314,12 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
     $(buttonsDiv).append(saveBTN)
     $(buttonsDiv).append(cancelBTN)
 
+    // All the managing of the coins in the popup
     handlePopupToggle(lastChecked, checkedTogglesArray)
 
 }
 
+// Creat the coin item from array in the popup managing toggles 
 function creatToggleItemList(toggleItem) {
 
     let choice = $("<div></div>").addClass("coin-choice")
@@ -256,131 +339,61 @@ function creatToggleItemList(toggleItem) {
 
 }
 
-function creatWaitingPopup() {
-    let div = $("<div></div>").addClass("waiting-popup")
-    let img = $("<img>").addClass("waiting-coin").attr("src", "images/1716e77877197a3958cd656574820ee1.gif").attr("alt", "progress bar")
-
-    $("body").prepend(div)
-    $(div).append(img)
-}
-
-function creatErrorSearchMSG() {
-
-    let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
-
-    $("main").append(msg)
-
-
-}
-
-function creatArrayOfCheckedToggles() {
-    let togglesArray = []
-
-    let toggles = $(`.coinToggle`)
-
-    for (const toggle of toggles) {
-        if (toggle.checked) {
-
-            let name = $(toggle).parent().parent().parent().next().text()
-            togglesArray.push({ name: name, number: toggle.id })
-        }
-  
-    }
-   
-    return togglesArray
-}
-
-
-// Handle Function
-
-function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS) {
-    console.log("test");
-    $(document).ready(function () {
-        creatWaitingPopup()
-
-        $.get("https://api.coingecko.com/api/v3/coins/" + id, function (info) {
-
-            $(imageCoin).attr("src", info.image.small)
-            $(coinToUSD).text(`USD: ${info.market_data.current_price.usd}$`)
-            $(coinToEUR).text(`EUR: ${info.market_data.current_price.eur}£`)
-            $(coinToILS).text(`ILS: ${info.market_data.current_price.ils}₪`)
-
-            // save to localStorage
-            let dateInfo = new Date()
-            dateInfo = dateInfo.toString()
-
-            localStorage.setItem(name, JSON.stringify({
-                date: dateInfo,
-                USD: info.market_data.current_price.usd,
-                EUR: info.market_data.current_price.eur,
-                ILS: info.market_data.current_price.ils,
-                image: info.image.small
-            }))
-            $(".waiting-popup").remove()
-        })
-    })
-
-
-}
-
-function handleHomepageToggles(thisToggle) {
-    let checkedTogglesArray = []
-    $(thisToggle).change(e => {
-        
-        checkedTogglesArray = creatArrayOfCheckedToggles()
-        
-        if (checkedTogglesArray.length == 6) {
-            
-            let name = $(e.target).parent().parent().parent().next().text()
-            
-            let lastChecked = { name: name, number: e.target.id }
-            
-            creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
-        }
-
-    })
-   
-}
-
+// Manege the managing toggles popup 
 function handlePopupToggle(lastChecked, checkedToggleArray) {
+    // creating an empty array to manege the toggles coin status in the popup
     let currentCheckedTogglesArray = []
+    
+    // When toggle coin status change
     $(".toggle-item").change(() => {
+
+        // Empty the array
         currentCheckedTogglesArray = []
         let toggles = $(`.toggle-item`)
-        
+
+        // Check all the status toggle in popup
         for (const toggle of toggles) {
+            
+            // If the specific toggle is checked
             if (toggle.checked) {
 
+                // Push the toggle data to array
                 let name = $(toggle).parent().parent().prev().text()
-                console.log(name);
 
                 currentCheckedTogglesArray.push({ name: name, number: toggle.id })
             }
         }
-        console.log(currentCheckedTogglesArray);
-
-
+        
     })
 
+    // When clicking on the save button 
     $(".saveBTN").click(() => {
 
+        // If there is more then 5 coins toggle in status checked
         if (currentCheckedTogglesArray.length > 5) {
+            // In-light the instruction in the title
             $("h3").css("color", "red").css("font-weight", 900)
         }
+        // If there is less then 5 coins toggle in status checked
         else {
+
+            // Remove the managing toggles popup
             $(".screen-container").remove()
 
-            // clear all toggles
+            // Clear all toggles from page
             let coins = $(".card-body")
-
+            // Going on just on the coins that saved in the array of the main page managing array
             for (const toggle of checkedToggleArray) {
                 let num = toggle.number.replace(/\D/g, '')
                 let coin = coins[num]
                 coin = $(coin).find("input")
                 $(coin).prop("checked", false)
             }
+
+            // Clear the main array
             checkedToggleArray = []
 
+            // Change the status coins toggles to check just in the coins from the array of managing toggle popup 
             for (const toggle of currentCheckedTogglesArray) {
                 let num = toggle.number.replace(/\D/g, '')
                 let coin = coins[num]
@@ -389,14 +402,16 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
             }
 
         }
-
+        // Remove the managing toggles popup
         $(".screen-container").remove()
 
 
     })
 
+    // When cancel button is clicked
     $(".cancelBTN").click(() => {
-        
+
+        // Change the status of the last coin toggle that was checked back to unchecked
         let coins = $(".card-body")
         let num = lastChecked.number.replace(/\D/g, '')
         let coin = coins[num]
@@ -405,12 +420,45 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
         $(coin).prop("checked", false)
 
+        // Remove the managing toggles popup
         $(".screen-container").remove()
 
         checkedToggleArray = []
     })
 
 }
+
+// // // // // // About page // // // // // //
+
+// Creating the about page
+function creatAboutPage() {
+
+    $(document).ready(function () {
+
+        // Clean the main section from other page content 
+        $("main").html("")
+
+        // Disabled the search field 
+        $(".searchINP").attr("disabled", true)
+
+        // Creat the elements in the page
+        let title = $("<h2></h2>").text("A little bit About this site")
+        let section = $("<div></div>").addClass("section")
+        let img = $("<img>").addClass("about-img").attr("src", "").attr("alt", "")
+        let mainInfo = $("<p></p>").addClass("about-info").text("")
+
+        // Combine everything together
+        $("main").append(title)
+        $("main").append(section)
+        $(section).append(img)
+        $(section).prepend(mainInfo)
+
+    })
+}
+
+
+
+
 
 
 
