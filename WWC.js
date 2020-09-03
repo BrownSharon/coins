@@ -112,9 +112,10 @@ function creatCoin(currentCoin, idNum) {
     let coin = $("<div></div>").addClass("card-body").attr("id", `coin${idNum}`)
     let coinRow = $("<div></div>").addClass("row")
     let coinSymbol = $("<h5></h5>").addClass("card-title").text(currentCoin.symbol)
-    let switchToggle = $("<div></div>").addClass("custom-control form-control-lg custom-switch")
-    let toggleInp = $("<input>").addClass("custom-control-input coinToggle").attr("type", "checkbox").attr("id", `live_reports${idNum}`)
-    let toggleLabel = $("<label></label>").addClass("custom-control-label").attr("for", `live_reports${idNum}`)
+    let switchToggle = $("<div></div>").addClass("control-div")
+    let toggleInp = $("<input>").addClass("coinToggle").attr("type", "checkbox").attr("id", `live_reports${idNum}`)
+    let toggleLabel = $("<label></label>").addClass("switch").attr("for", `live_reports${idNum}`)
+    let slider = $("<span></span>").addClass("slider round")
     let coinName = $("<p></p>").addClass("card-text").text(currentCoin.name)
     let moreInfoBTN = $("<button></button>").addClass("btn btn-warning moreInfoBTN").text("More Info").attr("data-toggle", "collapse").attr("data-target", "#more_info").attr("aria-controls", "more_info").attr("aria-expanded", "false")
     let moreInfoCollapse = $("<div></div>").addClass("collapse").attr("id", `more_info${idNum}`)
@@ -130,8 +131,9 @@ function creatCoin(currentCoin, idNum) {
     $(coin).append(coinRow)
     $(coinRow).append(coinSymbol)
     $(coinRow).append(switchToggle)
-    $(switchToggle).append(toggleInp)
     $(switchToggle).append(toggleLabel)
+    $(toggleLabel).append(toggleInp)
+    $(toggleLabel).append(slider)
     $(coin).append(coinName)
     $(coin).append(moreInfoBTN)
     $(coin).append(moreInfoCollapse)
@@ -202,7 +204,7 @@ function creatCoin(currentCoin, idNum) {
     // Handle the toggle switch
 
     handleHomepageToggles(toggleInp)
-
+    
 }
 
 function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
@@ -221,8 +223,7 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
         let toggleItem = checkedTogglesArray[i];
         creatToggleItemList(toggleItem)
     }
-    creatToggleItemList(lastChecked)
-    checkedTogglesArray.push(lastChecked)
+    
 
     let buttonsDiv = $("<div></div>").addClass("decision-buttons")
     let saveBTN = $("<button></button>").addClass("saveBTN btn-success").text("save")
@@ -240,15 +241,18 @@ function creatToggleItemList(toggleItem) {
 
     let choice = $("<div></div>").addClass("coin-choice")
     let coinName = $("<p></p>").text(toggleItem.name)
-    let switchT = $("<div></div>").addClass("custom-control custom-switch")
-    let inpT = $("<input>").addClass("custom-control-input toggle-item").attr("type", "checkbox").attr("id", `item${toggleItem.number}`).attr("checked", "true")
-    let labelT = $("<label></label>").addClass("custom-control-label").attr("for", `item${toggleItem.number}`)
+    let switchT = $("<div></div>").addClass("control-div")
+    let inpT = $("<input>").addClass("toggle-item").attr("type", "checkbox").attr("id", `item${toggleItem.number}`).attr("checked", "true")
+    let labelT = $("<label></label>").addClass("switch").attr("for", `item${toggleItem.number}`)
+    let slider = $("<span></span>").addClass("slider round")
+
 
     $(".choices").append(choice)
     $(choice).append(coinName)
     $(choice).append(switchT)
-    $(switchT).append(inpT)
     $(switchT).append(labelT)
+    $(labelT).append(inpT)
+    $(labelT).append(slider)
 
 }
 
@@ -270,20 +274,20 @@ function creatErrorSearchMSG() {
 }
 
 function creatArrayOfCheckedToggles() {
-    let checkedTogglesArray = []
+    let togglesArray = []
 
     let toggles = $(`.coinToggle`)
 
     for (const toggle of toggles) {
         if (toggle.checked) {
 
-            let name = $(toggle).parent().parent().next().text()
-            checkedTogglesArray.push({ name: name, number: toggle.id })
+            let name = $(toggle).parent().parent().parent().next().text()
+            togglesArray.push({ name: name, number: toggle.id })
         }
-
-
+  
     }
-    return checkedTogglesArray
+   
+    return togglesArray
 }
 
 
@@ -319,16 +323,36 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
 
 }
 
+function handleHomepageToggles(thisToggle) {
+    let checkedTogglesArray = []
+    $(thisToggle).change(e => {
+        
+        checkedTogglesArray = creatArrayOfCheckedToggles()
+        
+        if (checkedTogglesArray.length == 6) {
+            
+            let name = $(e.target).parent().parent().parent().next().text()
+            
+            let lastChecked = { name: name, number: e.target.id }
+            
+            creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
+        }
+
+    })
+   
+}
+
 function handlePopupToggle(lastChecked, checkedToggleArray) {
     let currentCheckedTogglesArray = []
     $(".toggle-item").change(() => {
         currentCheckedTogglesArray = []
         let toggles = $(`.toggle-item`)
-
+        
         for (const toggle of toggles) {
             if (toggle.checked) {
 
-                let name = $(toggle).parent().prev().text()
+                let name = $(toggle).parent().parent().prev().text()
+                console.log(name);
 
                 currentCheckedTogglesArray.push({ name: name, number: toggle.id })
             }
@@ -372,7 +396,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
     })
 
     $(".cancelBTN").click(() => {
-
+        
         let coins = $(".card-body")
         let num = lastChecked.number.replace(/\D/g, '')
         let coin = coins[num]
@@ -388,23 +412,9 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
 }
 
-function handleHomepageToggles(thisToggle) {
-    let checkedTogglesArray = []
-    $(thisToggle).change(e => {
-        checkedTogglesArray = creatArrayOfCheckedToggles()
 
-        if (checkedTogglesArray.length == 6) {
-            checkedTogglesArray.pop()
-            let name = $(e.target).parent().parent().next().text()
 
-            let lastChecked = { name: name, number: e.target.id }
-            console.log(checkedTogglesArray)
-            creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
-        }
 
-    })
-
-}
 
 
 
