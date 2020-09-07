@@ -1,7 +1,7 @@
 $(() => {
 
     // Loading/reloading the site 
-
+    
     creatHomPage()
 
     // Handle the navigation 
@@ -442,16 +442,40 @@ function creatAboutPage() {
         $(".searchINP").attr("disabled", true)
 
         // Creat the elements in the page
-        let title = $("<h2></h2>").text("A little bit About this site")
-        let section = $("<div></div>").addClass("section")
-        let img = $("<img>").addClass("about-img").attr("src", "").attr("alt", "")
-        let mainInfo = $("<p></p>").addClass("about-info").text("")
+        let title = $("<h2></h2>").text("A little bit (coin) About the site author")
+        let section = $("<div></div>").addClass("section parallax2")
+        let img = $("<img>").addClass("about-img").attr("src", "images/parallax/family_pic.jpg").attr("alt", "version 2019")
+        let spanH = $("<p></p>").text("My name is Sharon Brown,")
+        let spanH2 = $("<p></p>").text("Born and raised in Israel Ra'anana.")
+        let spanStart = $("<p></p>").text("I started a startup with my best partner in 2002, and from then we had 4 big software products:")
+        let dor =$("<p></p>").text("The first one we named “Dor” on behalf of the new generation of products we started. This product has a lot of features in it’s latest release version 16.10. Its specialty is soccer, trampoline flips, hanging with friends and sleep.")
+        let spenD =$("<p></p>").text("The second product we made 3 years after the first one to establish our status in the economic world to be a serious company with more than one product.")
+        let bnaya =$("<p></p>").text("We named it “Bnaya”. The first couple of releases of this product we had a lot of production bugs. It used to give an output in all sorts of ways we didn't know it could do. After a year we managed to stabilize the versions, and today in version number 13.09 the product is unique , user friendly and smart. We got the best user opinion about it. It's specialty is gaming, soccer and hockey.  These two products complete each other, in there's abilities.")
+        let maayan =$("<p></p>").text("After “bnaya” we moved our headquarters to a new building with more work space, and developed our third product we named “ma’ayan”. This product also has its own unique  behavior. We managed to stabilize the last couple of versions, but there are still a couple of production bugs that we don't find the pattern, or the trigger that caused them. With all that been said the product is user friendly with AI and features that only it has. Happiness spreading, artistic tendency, and the power of stand alone products. The last version of “Ma’ayan” is 10.05.pro.")
+        let haggay =$("<p></p>").text("The fourth and last product we named “Haggay”, this product is still young, having bugs in sleep mode, and specially in closing releases that need to be done manually, and in the integration in other development environments without our technical support. Last version is 5.06 as a bug in the frontend css in the header tag that lost one present of the attribute “front teeth” ")
+        let spanEnd1 = $("<p></p>").text("Hope to have more collaboration with other companies in the future, for further growth of the   company.")
+        let spanEnd2 = $("<p></p>").text("Best regards")
+        let spanEnd3 = $("<p></p>").text("Sharon Brown CEO")
+        
+        let mainInfo = $("<div></div>").addClass("about-info")
+        
 
         // Combine everything together
-        $("main").append(title)
         $("main").append(section)
-        $(section).append(img)
-        $(section).prepend(mainInfo)
+        $(section).append(title)
+        // $(section).append(img)
+        $(section).append(mainInfo)
+        $(mainInfo).append(spanH)
+        $(mainInfo).append(spanH2)
+        $(mainInfo).append(spanStart)
+        $(mainInfo).append(dor)
+        $(mainInfo).append(spenD)
+        $(mainInfo).append(bnaya)
+        $(mainInfo).append(maayan)
+        $(mainInfo).append(haggay)
+        $(mainInfo).append(spanEnd1)
+        $(mainInfo).append(spanEnd2)
+        $(mainInfo).append(spanEnd3)
 
     })
 }

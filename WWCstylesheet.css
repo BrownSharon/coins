@@ -65,6 +65,7 @@ h1 {
 
 .search>input {
     padding: 2px;
+    
 }
 
 /* error msg for search */
@@ -82,6 +83,7 @@ main {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    
     position: relative;
     margin: 0;
     padding: 0;
@@ -92,9 +94,9 @@ main {
 /* coin card */
 .card-body {
     border: black 2px solid;
-    max-width: 40vh;
-    width: 30vh;
-    min-width: 250px;
+    max-width: 20vw;
+    width: 20vw;
+    min-width: 200px;
     margin: 1.5%;
     background-color: white;
     display: flex;
@@ -142,7 +144,9 @@ main {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    width: 100%;
+    max-width: 95%;
+    width: 90%;
+    min-width: 170px;
     background-color: white;
     margin-top: 1vw;
     border: black 2px solid;
@@ -156,22 +160,22 @@ main {
 }
 
 .cont>img {
-    padding: 10%;
-    margin-left: 1vw;
+    padding: 0;
+    margin-right: 3vw;
     margin-top: 1vw;
 }
 
 .USD {
-    margin-right: 1vw;
+    margin-left:2vw;
     margin-top: 1vh;
 }
 
 .EUR {
-    margin-right: 1vw;
+    margin-left:2vw;
 }
 
 .ILS {
-    margin-right: 1vw;
+    margin-left:2vw;
 }
 
 /* waiting popup */
@@ -255,43 +259,66 @@ h3 {
 /* about page content */
 
 h2 {
-    background-color: rgb(240, 116, 59);
+    /* background-color: white; */
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
     width: 100vw;
     height: 10vh;
-    border: 2px solid rgb(241, 131, 68);
+   
     text-align: center;
     font-weight: bolder;
-    font-size: 30px;
+    font-size: 40px;
+    color: black;
+    font-weight: 800;
 }
 
 .section {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 2px solid rgb(241, 172, 68);
-    height: 45vh;
     margin: 0;
     padding: 0;
+    color: black;
+    font-weight: 800;
 }
 
 .about-img {
-    width: 30vw;
-    height: 45vh;
+    width: 50%;
+    max-width: 75%;
+    
     margin: 0;
-    padding: 3%;
     border: 2px solid rgb(241, 172, 68);
+    border-radius: 75%;
+    margin: 1%;
+    opacity: 0.75
+;
+    
 }
 
 .about-info {
-    width: 70vw;
-    height: 45vh;
+    width: 100%;
+    height: 100%;
     margin: 0;
-    border: 2px solid rgb(241, 172, 68);
+    
     padding: 3%;
+    font-size: 20px;
+}
+
+.parallax2 {
+    /* The image used */
+    background-image: url("images/parallax/family_pic.jpg");
+    /* Set a specific height */
+    height: 100%;
+    /* Create the parallax scrolling effect */
+    opacity: 0.7;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -10;
 }
 
 /* toggle switch */
