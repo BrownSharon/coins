@@ -1,7 +1,7 @@
+let checkedTogglesArray = []
 $(() => {
 
     // Loading/reloading the site 
-    
     creatHomPage()
 
     // Handle the navigation 
@@ -45,14 +45,17 @@ $(() => {
         }
     })
 
+    console.log(checkedTogglesArray);
+
 })
 
 // // // // // // Home page function // // // // // //
 
 // Creating the home page\coins page from API 
+
 function creatHomPage() {
     let idNum = 0
-
+    console.log(checkedTogglesArray)
     $(document).ready(function () {
 
         // Clean the main section from other page content
@@ -65,9 +68,9 @@ function creatHomPage() {
         creatWaitingPopup()
 
         // Getting the data from API
-        $.get("https://api.coingecko.com/api/v3/coins/list", function (coins) {
-            for (let coin = 0; coin < 100; coin++) {
-                let currentCoin = $(coins)[coin];
+        $.get("https://api.coingecko.com/api/v3/coins/list", function (data) {
+            for (let i = 0; i < 100; i++) {
+                let currentCoin = $(data)[i];
 
                 // Make sure the coins that shows in the page will be with More Info data from the beginning 
                 $.get("https://api.coingecko.com/api/v3/coins/" + currentCoin.id, function (info) {
@@ -80,6 +83,13 @@ function creatHomPage() {
                     }
                 })
 
+            }
+            let coins = $(".card-body")
+            for (const toggle of checkedTogglesArray) {
+                let num = toggle.number.replace(/\D/g, '')
+                let coin = coins[num]
+                coin = $(coin).find("input")
+                $(coin).prop("checked", true)
             }
 
             // Delete the waiting popup 
@@ -239,7 +249,7 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
 function handleHomepageToggles(thisToggle) {
     
     // Creat empty array to manage the checked toggles
-    let checkedTogglesArray = []
+    checkedTogglesArray = []
 
     // When clicking and changing toggle status
     $(thisToggle).change(e => {
@@ -434,7 +444,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 function creatAboutPage() {
 
     $(document).ready(function () {
-
+        
         // Clean the main section from other page content 
         $("main").html("")
 
@@ -443,8 +453,8 @@ function creatAboutPage() {
 
         // Creat the elements in the page
         let title = $("<h2></h2>").text("A little bit (coin) About the site author")
-        let section = $("<div></div>").addClass("section parallax2")
-        let img = $("<img>").addClass("about-img").attr("src", "images/parallax/family_pic.jpg").attr("alt", "version 2019")
+        let parallax = $("<div></div>").addClass("parallax2")
+        let section = $("<div></div>").addClass("section")
         let spanH = $("<p></p>").text("My name is Sharon Brown,")
         let spanH2 = $("<p></p>").text("Born and raised in Israel Ra'anana.")
         let spanStart = $("<p></p>").text("I started a startup with my best partner in 2002, and from then we had 4 big software products:")
@@ -461,7 +471,8 @@ function creatAboutPage() {
         
 
         // Combine everything together
-        $("main").append(section)
+        $("main").append(parallax)
+        $(parallax).append(section)
         $(section).append(title)
         // $(section).append(img)
         $(section).append(mainInfo)
