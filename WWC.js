@@ -45,7 +45,7 @@ $(() => {
         }
     })
 
-    console.log(checkedTogglesArray);
+
 
 })
 
@@ -55,7 +55,7 @@ $(() => {
 
 function creatHomPage() {
     let idNum = 0
-    console.log(checkedTogglesArray)
+    
     $(document).ready(function () {
 
         // Clean the main section from other page content
@@ -63,6 +63,7 @@ function creatHomPage() {
 
         // Activate the search field 
         $(".searchINP").attr("disabled", false)
+
 
         // Pop the waiting popup while getting the data from API
         creatWaitingPopup()
@@ -80,17 +81,19 @@ function creatHomPage() {
                         // Creating the coins cards 
                         creatCoin(currentCoin, idNum)
                         idNum++
+                        // Update the checked status of the toggles
+                        let coins = $(".card-body")
+                        for (const toggle of checkedTogglesArray) {
+                            let num = toggle.number.replace(/\D/g, '')
+                            let coin = coins[num]
+                            coin = $(coin).find("input")
+                            $(coin).prop("checked", true)
+                        }
                     }
                 })
 
             }
-            let coins = $(".card-body")
-            for (const toggle of checkedTogglesArray) {
-                let num = toggle.number.replace(/\D/g, '')
-                let coin = coins[num]
-                coin = $(coin).find("input")
-                $(coin).prop("checked", true)
-            }
+
 
             // Delete the waiting popup 
             $(".waiting-popup").remove()
@@ -172,11 +175,9 @@ function creatCoin(currentCoin, idNum) {
 
                     let nowDate = new Date().getTime()
 
-
-                    console.log(localStorageDate, nowDate);
                     // Check if passed less then 2 minutes 
                     if ((localStorageDate + 120000) >= nowDate) {
-                        console.log("value")
+                        
                         // Create data from localStorage
                         $(imageCoin).attr("src", value.image)
                         $(coinToUSD).text(`USD: ${value.USD}$`)
@@ -192,7 +193,7 @@ function creatCoin(currentCoin, idNum) {
 
             // If there wasn't any key equal to coin name been clicked
             if (!found) {
-                console.log("test2");
+                
                 getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
             }
 
@@ -211,7 +212,7 @@ function creatCoin(currentCoin, idNum) {
 
 // Fetch and place in variable the data from API and save to localStorage 
 function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS) {
-    
+
     $(document).ready(function () {
         // Pop the waiting popup while fetching the data from Api
         creatWaitingPopup()
@@ -247,16 +248,16 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
 
 // Managing the toggles status checked\not in array and pop the toggles manage popup in the 6th checked toggle   
 function handleHomepageToggles(thisToggle) {
-    
+
     // Creat empty array to manage the checked toggles
-    checkedTogglesArray = []
+    // checkedTogglesArray = []
 
     // When clicking and changing toggle status
     $(thisToggle).change(e => {
 
         // Place in the array all the toggles that checked in the var
         checkedTogglesArray = creatArrayOfCheckedToggles()
-
+       
         // Check if the array contain more then 5 elements 
         if (checkedTogglesArray.length == 6) {
 
@@ -282,7 +283,7 @@ function creatArrayOfCheckedToggles() {
 
     // Check all toggles status of the coins in page 
     for (const toggle of toggles) {
-        
+
         // If the toggle status is checked 
         if (toggle.checked) {
 
@@ -353,7 +354,7 @@ function creatToggleItemList(toggleItem) {
 function handlePopupToggle(lastChecked, checkedToggleArray) {
     // creating an empty array to manege the toggles coin status in the popup
     let currentCheckedTogglesArray = []
-    
+
     // When toggle coin status change
     $(".toggle-item").change(() => {
 
@@ -363,7 +364,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
         // Check all the status toggle in popup
         for (const toggle of toggles) {
-            
+
             // If the specific toggle is checked
             if (toggle.checked) {
 
@@ -373,7 +374,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
                 currentCheckedTogglesArray.push({ name: name, number: toggle.id })
             }
         }
-        
+
     })
 
     // When clicking on the save button 
@@ -401,7 +402,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
             }
 
             // Clear the main array
-            checkedToggleArray = []
+            // checkedToggleArray = []
 
             // Change the status coins toggles to check just in the coins from the array of managing toggle popup 
             for (const toggle of currentCheckedTogglesArray) {
@@ -433,7 +434,8 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
         // Remove the managing toggles popup
         $(".screen-container").remove()
 
-        checkedToggleArray = []
+        // checkedToggleArray = []
+        
     })
 
 }
@@ -444,6 +446,8 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 function creatAboutPage() {
 
     $(document).ready(function () {
+        // Save the the checked toggles in the array 
+        checkedTogglesArray = creatArrayOfCheckedToggles()
         
         // Clean the main section from other page content 
         $("main").html("")
@@ -458,17 +462,17 @@ function creatAboutPage() {
         let spanH = $("<p></p>").text("My name is Sharon Brown,")
         let spanH2 = $("<p></p>").text("Born and raised in Israel Ra'anana.")
         let spanStart = $("<p></p>").text("I started a startup with my best partner in 2002, and from then we had 4 big software products:")
-        let dor =$("<p></p>").text("The first one we named “Dor” on behalf of the new generation of products we started. This product has a lot of features in it’s latest release version 16.10. Its specialty is soccer, trampoline flips, hanging with friends and sleep.")
-        let spenD =$("<p></p>").text("The second product we made 3 years after the first one to establish our status in the economic world to be a serious company with more than one product.")
-        let bnaya =$("<p></p>").text("We named it “Bnaya”. The first couple of releases of this product we had a lot of production bugs. It used to give an output in all sorts of ways we didn't know it could do. After a year we managed to stabilize the versions, and today in version number 13.09 the product is unique , user friendly and smart. We got the best user opinion about it. It's specialty is gaming, soccer and hockey.  These two products complete each other, in there's abilities.")
-        let maayan =$("<p></p>").text("After “bnaya” we moved our headquarters to a new building with more work space, and developed our third product we named “ma’ayan”. This product also has its own unique  behavior. We managed to stabilize the last couple of versions, but there are still a couple of production bugs that we don't find the pattern, or the trigger that caused them. With all that been said the product is user friendly with AI and features that only it has. Happiness spreading, artistic tendency, and the power of stand alone products. The last version of “Ma’ayan” is 10.05.pro.")
-        let haggay =$("<p></p>").text("The fourth and last product we named “Haggay”, this product is still young, having bugs in sleep mode, and specially in closing releases that need to be done manually, and in the integration in other development environments without our technical support. Last version is 5.06 as a bug in the frontend css in the header tag that lost one present of the attribute “front teeth” ")
+        let dor = $("<p></p>").text("The first one we named “Dor” on behalf of the new generation of products we started. This product has a lot of features in it’s latest release version 16.10. Its specialty is soccer, trampoline flips, hanging with friends and sleep.")
+        let spenD = $("<p></p>").text("The second product we made 3 years after the first one to establish our status in the economic world to be a serious company with more than one product.")
+        let bnaya = $("<p></p>").text("We named it “Bnaya”. The first couple of releases of this product we had a lot of production bugs. It used to give an output in all sorts of ways we didn't know it could do. After a year we managed to stabilize the versions, and today in version number 13.09 the product is unique , user friendly and smart. We got the best user opinion about it. It's specialty is gaming, soccer and hockey.  These two products complete each other, in there's abilities.")
+        let maayan = $("<p></p>").text("After “bnaya” we moved our headquarters to a new building with more work space, and developed our third product we named “ma’ayan”. This product also has its own unique  behavior. We managed to stabilize the last couple of versions, but there are still a couple of production bugs that we don't find the pattern, or the trigger that caused them. With all that been said the product is user friendly with AI and features that only it has. Happiness spreading, artistic tendency, and the power of stand alone products. The last version of “Ma’ayan” is 10.05.pro.")
+        let haggay = $("<p></p>").text("The fourth and last product we named “Haggay”, this product is still young, having bugs in sleep mode, and specially in closing releases that need to be done manually, and in the integration in other development environments without our technical support. Last version is 5.06 as a bug in the frontend css in the header tag that lost one present of the attribute “front teeth” ")
         let spanEnd1 = $("<p></p>").text("Hope to have more collaboration with other companies in the future, for further growth of the   company.")
         let spanEnd2 = $("<p></p>").text("Best regards")
         let spanEnd3 = $("<p></p>").text("Sharon Brown CEO")
-        
+
         let mainInfo = $("<div></div>").addClass("about-info")
-        
+
 
         // Combine everything together
         $("main").append(parallax)
