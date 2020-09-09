@@ -55,7 +55,7 @@ $(() => {
 
 function creatHomPage() {
     let idNum = 0
-    
+
     $(document).ready(function () {
 
         // Clean the main section from other page content
@@ -177,7 +177,7 @@ function creatCoin(currentCoin, idNum) {
 
                     // Check if passed less then 2 minutes 
                     if ((localStorageDate + 120000) >= nowDate) {
-                        
+
                         // Create data from localStorage
                         $(imageCoin).attr("src", value.image)
                         $(coinToUSD).text(`USD: ${value.USD}$`)
@@ -193,7 +193,7 @@ function creatCoin(currentCoin, idNum) {
 
             // If there wasn't any key equal to coin name been clicked
             if (!found) {
-                
+
                 getMoreInfoFromAPI(currentCoin.id, currentCoin.name, imageCoin, coinToUSD, coinToEUR, coinToILS)
             }
 
@@ -249,56 +249,34 @@ function getMoreInfoFromAPI(id, name, imageCoin, coinToUSD, coinToEUR, coinToILS
 // Managing the toggles status checked\not in array and pop the toggles manage popup in the 6th checked toggle   
 function handleHomepageToggles(thisToggle) {
 
-    // Creat empty array to manage the checked toggles
-    // checkedTogglesArray = []
-
     // When clicking and changing toggle status
     $(thisToggle).change(e => {
-
-        // Place in the array all the toggles that checked in the var
-        checkedTogglesArray = creatArrayOfCheckedToggles()
        
+        let name = $(e.target).parent().parent().parent().next().text()
+
+        if (e.target.checked) {
+            checkedTogglesArray.push({ name: name, number: e.target.id })
+        } else {
+            checkedTogglesArray.splice($.inArray({ name: name, number: e.target.id }, checkedTogglesArray), 1)
+        }
+        console.log(checkedTogglesArray);
         // Check if the array contain more then 5 elements 
         if (checkedTogglesArray.length == 6) {
 
             // Creat an object that contain the last coin that it's toggle was prest for canceling option  
-            let name = $(e.target).parent().parent().parent().next().text()
-
             let lastChecked = { name: name, number: e.target.id }
 
             // Pop the managing toggles popup
-            creatPopUpToggleHandler(lastChecked, checkedTogglesArray)
+            creatPopUpToggleHandler(lastChecked)
+            
         }
 
     })
 
 }
 
-// Creat array of checked toggles in coin page
-function creatArrayOfCheckedToggles() {
-    // Creat an empty array
-    let togglesArray = []
-
-    let toggles = $(`.coinToggle`)
-
-    // Check all toggles status of the coins in page 
-    for (const toggle of toggles) {
-
-        // If the toggle status is checked 
-        if (toggle.checked) {
-
-            // Push the specific coin data to array
-            let name = $(toggle).parent().parent().parent().next().text()
-            togglesArray.push({ name: name, number: toggle.id })
-        }
-
-    }
-    // Return the array
-    return togglesArray
-}
-
 // creat the managing toggles popup 
-function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
+function creatPopUpToggleHandler(lastChecked) {
 
     let container = $("<div></div>").addClass("screen-container")
     let popupT = $("<div></div>").addClass("handle-toggle")
@@ -311,11 +289,10 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
     $(popupT).append(choices)
 
     // Creat the list of coins from the checked toggle array
-    for (let i = 0; i < checkedTogglesArray.length; i++) {
-        let toggleItem = checkedTogglesArray[i];
+
+    for (const toggleItem of checkedTogglesArray) {
         creatToggleItemList(toggleItem)
     }
-
 
     let buttonsDiv = $("<div></div>").addClass("decision-buttons")
     let saveBTN = $("<button></button>").addClass("saveBTN btn-success").text("save")
@@ -326,7 +303,7 @@ function creatPopUpToggleHandler(lastChecked, checkedTogglesArray) {
     $(buttonsDiv).append(cancelBTN)
 
     // All the managing of the coins in the popup
-    handlePopupToggle(lastChecked, checkedTogglesArray)
+    handlePopupToggle(lastChecked)
 
 }
 
@@ -336,8 +313,8 @@ function creatToggleItemList(toggleItem) {
     let choice = $("<div></div>").addClass("coin-choice")
     let coinName = $("<p></p>").text(toggleItem.name)
     let switchT = $("<div></div>").addClass("control-div")
-    let inpT = $("<input>").addClass("toggle-item").attr("type", "checkbox").attr("id", `item${toggleItem.number}`).attr("checked", "true")
-    let labelT = $("<label></label>").addClass("switch").attr("for", `item${toggleItem.number}`)
+    let inpT = $("<input>").addClass("toggle-item").attr("type", "checkbox").attr("id", `itemFor${toggleItem.number}`).attr("checked", "true")
+    let labelT = $("<label></label>").addClass("switch").attr("for", `itemFor${toggleItem.number}`)
     let slider = $("<span></span>").addClass("slider round")
 
 
@@ -351,30 +328,20 @@ function creatToggleItemList(toggleItem) {
 }
 
 // Manege the managing toggles popup 
-function handlePopupToggle(lastChecked, checkedToggleArray) {
-    // creating an empty array to manege the toggles coin status in the popup
-    let currentCheckedTogglesArray = []
+function handlePopupToggle(lastChecked) {
+    // creating an parallel array to manege the toggles coin status in the popup
+    let currentCheckedTogglesArray = checkedTogglesArray.map(item => item = { name: item.name, number: `itemFor${item.number}` })
 
     // When toggle coin status change
-    $(".toggle-item").change(() => {
+    $(".toggle-item").change((e) => {
 
-        // Empty the array
-        currentCheckedTogglesArray = []
-        let toggles = $(`.toggle-item`)
-
-        // Check all the status toggle in popup
-        for (const toggle of toggles) {
-
-            // If the specific toggle is checked
-            if (toggle.checked) {
-
-                // Push the toggle data to array
-                let name = $(toggle).parent().parent().prev().text()
-
-                currentCheckedTogglesArray.push({ name: name, number: toggle.id })
-            }
+        let name = $(e.target).parent().parent().prev().text()
+        if (e.target.checked) {
+            currentCheckedTogglesArray.push({ name: name, number: e.target.id })
+        } else {
+            let itemToDeletePOS = currentCheckedTogglesArray.findIndex(item => item.name === name)
+            currentCheckedTogglesArray.splice(itemToDeletePOS, 1)
         }
-
     })
 
     // When clicking on the save button 
@@ -387,22 +354,16 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
         }
         // If there is less then 5 coins toggle in status checked
         else {
-
-            // Remove the managing toggles popup
-            $(".screen-container").remove()
-
-            // Clear all toggles from page
             let coins = $(".card-body")
             // Going on just on the coins that saved in the array of the main page managing array
-            for (const toggle of checkedToggleArray) {
+            for (const toggle of checkedTogglesArray) {
                 let num = toggle.number.replace(/\D/g, '')
                 let coin = coins[num]
                 coin = $(coin).find("input")
                 $(coin).prop("checked", false)
             }
-
-            // Clear the main array
-            // checkedToggleArray = []
+            // clear the main managing array 
+            checkedTogglesArray=[]
 
             // Change the status coins toggles to check just in the coins from the array of managing toggle popup 
             for (const toggle of currentCheckedTogglesArray) {
@@ -412,10 +373,12 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
                 $(coin).prop("checked", true)
             }
 
+            // update the array with the right input
+            checkedTogglesArray = currentCheckedTogglesArray.map(item=>item={name:item.name, number: `live_reports${item.number.replace(/\D/g, '')}`})
         }
+        console.log(checkedTogglesArray);
         // Remove the managing toggles popup
         $(".screen-container").remove()
-
 
     })
 
@@ -431,11 +394,13 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 
         $(coin).prop("checked", false)
 
+        // remove the last coin checked from the array
+        let itemToDeletePOS = checkedTogglesArray.findIndex(item => item === lastChecked)
+        checkedTogglesArray.splice(itemToDeletePOS, 1)
+        console.log(checkedTogglesArray);
         // Remove the managing toggles popup
         $(".screen-container").remove()
 
-        // checkedToggleArray = []
-        
     })
 
 }
@@ -446,9 +411,7 @@ function handlePopupToggle(lastChecked, checkedToggleArray) {
 function creatAboutPage() {
 
     $(document).ready(function () {
-        // Save the the checked toggles in the array 
-        checkedTogglesArray = creatArrayOfCheckedToggles()
-        
+ 
         // Clean the main section from other page content 
         $("main").html("")
 
