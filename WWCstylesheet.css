@@ -99,8 +99,8 @@ main {
 /* coin card */
 .card-body {
     border: black 2px solid;
-   width: 25vh;
-    margin: 1.5%;
+    width: 20vh;
+    margin: 1vw;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -158,17 +158,18 @@ main {
 .col {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+  
     align-items: center;
 }
 
 .cont>img {
     padding: 0;
-    margin-right: 3vw;
+    margin-right: 1vw;
     margin-top: 1vw;
+    margin-bottom: 1vw;
 }
 
-.USD {
+/* .USD {
     margin-left:2vw;
     margin-top: 1vh;
 }
@@ -179,7 +180,7 @@ main {
 
 .ILS {
     margin-left:2vw;
-}
+} */
 
 /* waiting popup */
 
@@ -422,11 +423,9 @@ h2 {
     }
 
     .card-body {
-        width: 25vw;
-        margin-left: 2%;
-        margin-right: 2%;
-
-       
+        width: 20vw;
+        margin: 1%;
+ 
     }
     
   } 
