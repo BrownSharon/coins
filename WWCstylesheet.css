@@ -18,6 +18,7 @@ body {
 /* title page */
 
 .title {
+    height: 35vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -96,8 +97,6 @@ main {
     border: black 2px solid;
     min-width: 20vw;
     width: 20vw;
-    /* max-width:20vw ; */
-    /* margin: 1%; */
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -395,10 +394,15 @@ input:checked+.slider:before {
         -webkit-text-stroke: 1px black;
     }
     .card-body {
+        border: black 2px solid;
         width: 90%;
-        /* margin-left: 5%;
-        margin-right: 5%; */
-        margin: 1%;
+        margin: 2%;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        font-weight: bolder;
+        color: black;
     }
     .card-title {
         width: 70%;
@@ -420,7 +424,7 @@ input:checked+.slider:before {
 
 @media only screen and (min-width: 768px) {
     .title {
-        height: 20vh;
+        height: 25vh;
     }
     h1 {
         font-size: 60px;
@@ -429,8 +433,9 @@ input:checked+.slider:before {
         -webkit-text-stroke: 1px black;
     }
     .card-body {
-        width: 20vw;
+        width: 25vw;
         margin: 1%;
+        max-width:25vw;
     }
     .moreInfoBTN {
         max-width: 70%;
@@ -523,14 +528,15 @@ input:checked+.slider:before {
     }
 }
 
-@media only screen and (min-width: 768px) {
-
+@media only screen and (min-width: 992px) {
+    .title {
+        height: 35vh;
+    }
     .card-body {
         border: black 2px solid;
-        min-width: 20vw;
-        width: 20vw;
-        max-width:20vw ;
-        /* margin: 1%; */
+        min-width: 15vw;
+        width: 15vw;
+        max-width: 15vw;
         background-color: white;
         display: flex;
         flex-direction: column;
@@ -538,5 +544,16 @@ input:checked+.slider:before {
         font-weight: bolder;
         color: black;
     }
+    .cont {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        /* max-width: 100%; */
+        width: 100%;
+        /* min-width: 100%; */
+        background-color: white;
+        margin-top: 2vh;
+        border: black 2px solid;
+    }
 }
-
