@@ -393,6 +393,15 @@ input:checked+.slider:before {
         padding: 5px;
         -webkit-text-stroke: 1px black;
     }
+
+    .msg {
+        font-size: 20px;
+        text-align: center;
+        width: 100%;
+        margin: 5%;
+        font-weight: 700;
+        background-color: rgb(241, 172, 68);
+    }
     .card-body {
         border: black 2px solid;
         width: 90%;
@@ -419,6 +428,13 @@ input:checked+.slider:before {
     .col>p {
         font-size: larger;
         font-weight: 500;
+    }
+
+    .handle-toggle {
+        background-color: white;
+        width: 75vw;
+        opacity: 1;
+        border: 5px solid rgb(241, 172, 68);
     }
 }
 
@@ -526,6 +542,12 @@ input:checked+.slider:before {
         color: black;
         height: 100%;
     }
+    .handle-toggle {
+        background-color: white;
+        width: 75vw;
+        opacity: 1;
+        border: 5px solid rgb(241, 172, 68);
+    }
 }
 
 @media only screen and (min-width: 992px) {
@@ -555,5 +577,12 @@ input:checked+.slider:before {
         background-color: white;
         margin-top: 2vh;
         border: black 2px solid;
+    }
+
+    .handle-toggle {
+        background-color: white;
+        width: 50vw;
+        opacity: 1;
+        border: 5px solid rgb(241, 172, 68);
     }
 }
