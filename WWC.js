@@ -16,6 +16,7 @@ $(() => {
 
         let coins = $(".card-body")
         let coinInList = false
+        $(".msg").remove()
 
         // Check all coins in page 
         for (const coin of coins) {
@@ -27,22 +28,24 @@ $(() => {
             if ((coinTitle.indexOf(e.target.value) > -1) || e.target == "") {
                 // Shoe the coin that match
                 $(coin).show()
-                $(".msg").remove()
                 coinInList = true
             } else {
                 // Hide the coin if not
                 $(coin).hide()
             }
 
+
         }
         // If the string in input not match to any coin in page, display error msg
+        let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
+        $("main").append(msg)
+        $(".msg").hide()
+        
         if (!coinInList) {
-            $("main").html("")
-
-            let msg = $("<p></p>").addClass("msg").text("Oooopss... No result found, tray something else")
-
-            $("main").append(msg)
+            $(".msg").show()
+            
         }
+
     })
 
 
@@ -251,7 +254,7 @@ function handleHomepageToggles(thisToggle) {
 
     // When clicking and changing toggle status
     $(thisToggle).change(e => {
-       
+
         let name = $(e.target).parent().parent().parent().next().text()
 
         if (e.target.checked) {
@@ -259,7 +262,7 @@ function handleHomepageToggles(thisToggle) {
         } else {
             checkedTogglesArray.splice($.inArray({ name: name, number: e.target.id }, checkedTogglesArray), 1)
         }
-        console.log(checkedTogglesArray);
+
         // Check if the array contain more then 5 elements 
         if (checkedTogglesArray.length == 6) {
 
@@ -268,7 +271,7 @@ function handleHomepageToggles(thisToggle) {
 
             // Pop the managing toggles popup
             creatPopUpToggleHandler(lastChecked)
-            
+
         }
 
     })
@@ -331,7 +334,8 @@ function creatToggleItemList(toggleItem) {
 function handlePopupToggle(lastChecked) {
     // creating an parallel array to manege the toggles coin status in the popup
     let currentCheckedTogglesArray = checkedTogglesArray.map(item => item = { name: item.name, number: `itemFor${item.number}` })
-
+    console.log("first array", checkedTogglesArray);
+    console.log("current array", currentCheckedTogglesArray);
     // When toggle coin status change
     $(".toggle-item").change((e) => {
 
@@ -349,6 +353,7 @@ function handlePopupToggle(lastChecked) {
 
         // If there is more then 5 coins toggle in status checked
         if (currentCheckedTogglesArray.length > 5) {
+            console.log("test");
             // In-light the instruction in the title
             $("h3").css("color", "red").css("font-weight", 900)
         }
@@ -363,7 +368,7 @@ function handlePopupToggle(lastChecked) {
                 $(coin).prop("checked", false)
             }
             // clear the main managing array 
-            checkedTogglesArray=[]
+            checkedTogglesArray = []
 
             // Change the status coins toggles to check just in the coins from the array of managing toggle popup 
             for (const toggle of currentCheckedTogglesArray) {
@@ -374,11 +379,13 @@ function handlePopupToggle(lastChecked) {
             }
 
             // update the array with the right input
-            checkedTogglesArray = currentCheckedTogglesArray.map(item=>item={name:item.name, number: `live_reports${item.number.replace(/\D/g, '')}`})
+            checkedTogglesArray = currentCheckedTogglesArray.map(item => item = { name: item.name, number: `live_reports${item.number.replace(/\D/g, '')}` })
+
+            // Remove the managing toggles popup
+            $(".screen-container").remove()
         }
-        console.log(checkedTogglesArray);
-        // Remove the managing toggles popup
-        $(".screen-container").remove()
+
+
 
     })
 
@@ -397,7 +404,7 @@ function handlePopupToggle(lastChecked) {
         // remove the last coin checked from the array
         let itemToDeletePOS = checkedTogglesArray.findIndex(item => item === lastChecked)
         checkedTogglesArray.splice(itemToDeletePOS, 1)
-        console.log(checkedTogglesArray);
+
         // Remove the managing toggles popup
         $(".screen-container").remove()
 
@@ -411,7 +418,7 @@ function handlePopupToggle(lastChecked) {
 function creatAboutPage() {
 
     $(document).ready(function () {
- 
+
         // Clean the main section from other page content 
         $("main").html("")
 
